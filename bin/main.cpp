@@ -1,6 +1,6 @@
 /*
     This file is part of freelinkage.
-    Gapart is the program to modify particle-pack-files for DEM-simulations.
+    Freelinkage the program for calculating mechanical linkages.
     Copyright (C) 2013 TU Bergakademie Freiberg, Institute for Mechanics and Fluid Dynamics
 
     Author: 2013, Anton Gladky <gladky.anton@gmail.com>
@@ -20,16 +20,18 @@
 */
 
 #include "main.h"
+#include "log.h"
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
-using namespace std;
 
 int main(int ac, char* av[])
 { 
+  boost::shared_ptr<logs> log (new logs());
+  
   std::cout<<"\n\
-freelinkage \n\
+Freelinkage \n\
 Copyright (C) 2013 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
 "<<std::endl;
@@ -38,7 +40,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     po::options_description desc("Allowed options");
     desc.add_options()
       ("help", "produce help message")
-      ("input,i", po::value<string>(), "input file name")
+      ("input,i", po::value<std::string>(), "input file name")
     ;
     
     po::positional_options_description p;
@@ -49,15 +51,26 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     po::notify(vm);  
     
     if (vm.count("help")) {
-      cout << desc << std::endl;
+      std::cout << desc << std::endl;
       return 0;
     }
+    
+    if (vm.count("input")) {
+      std::string ss = "input file is: " + vm["config"].as<std::string>();
+      log->info(ss);
+    } else {
+      std::string ss = "input file is required, use `-i` option for that or `--help`.\n";
+      log->info(ss);
+      exit (EXIT_FAILURE);
+    }
+    //configFileName = vm["config"].as<string>();
   }
-   catch(exception& e) {
-      cerr << "error: " << e.what() << std::endl;
+   catch(std::exception& e) {
+      std::string ss =  "error: " + std::string(e.what());
+      log->info(ss);
       exit (EXIT_FAILURE);
   }
   catch(...) {
-      cerr << "Exception of unknown type!\n";
+      std::cerr << "Exception of unknown type!\n";
   }
 }
