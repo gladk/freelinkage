@@ -60,14 +60,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       log->info(ss);
     } else {
       std::string ss = "input file is required, use `-i` option for that or `--help`.\n";
-      log->info(ss);
+      log->fatal(ss);
       exit (EXIT_FAILURE);
     }
     //configFileName = vm["config"].as<string>();
   }
    catch(std::exception& e) {
       std::string ss =  "error: " + std::string(e.what());
-      log->info(ss);
+      log->fatal(ss);
       exit (EXIT_FAILURE);
   }
   catch(...) {

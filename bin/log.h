@@ -28,30 +28,17 @@
 #include <boost/regex.hpp>
 #include <boost/foreach.hpp>
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/sinks/sync_frontend.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/log/utility/empty_deleter.hpp>
-
 #include <iostream>
 #include <algorithm>
 #include <iterator>
 #include <string>
 
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+
 class logs {
-  private:
-    boost::shared_ptr< boost::log::core > _core;
-    boost::log::sources::severity_logger< boost::log::trivial::severity_level > _lg;
   public:
     logs();
     void info(std::string s);
-    boost::shared_ptr< boost::log::core > logRoutines();
+    void fatal(std::string s);
 };

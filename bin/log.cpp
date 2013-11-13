@@ -23,54 +23,16 @@
 #include "log.h"
 
 namespace logging = boost::log;
-namespace src = boost::log::sources;
-namespace expr = boost::log::expressions;
-namespace sinks = boost::log::sinks;
-namespace attrs = boost::log::attributes;
-namespace keywords = boost::log::keywords;
-
 using namespace logging::trivial;
 
 logs::logs() {
-    // File log
-  boost::shared_ptr< logging::core > core = logging::core::get();
-  boost::shared_ptr< sinks::text_file_backend > backend =
-    boost::make_shared< sinks::text_file_backend >(
-      keywords::file_name = "rheometer.log"
-    );
     
-  typedef sinks::synchronous_sink< sinks::text_file_backend > sink_t;
-  boost::shared_ptr< sink_t > sink(new sink_t(backend));
-  
-  core->add_global_attribute("TimeStamp", attrs::local_clock());
-  
-  sink->set_formatter (
-    expr::format("[%1%] %2%")
-      % expr::attr< boost::posix_time::ptime >("TimeStamp")
-      % expr::xml_decor[ expr::stream << expr::smessage ]
-  );
-  core->add_sink(sink);
-  
-  // Screen log
-  
-  
-  boost::shared_ptr< sinks::text_ostream_backend > backendScreen = boost::make_shared< sinks::text_ostream_backend >();
-  backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, logging::empty_deleter()));
-  backendScreen->auto_flush(true);
-
-  // Wrap it into the frontend and register in the core.
-  // The backend requires synchronization in the frontend.
-  typedef sinks::synchronous_sink< sinks::text_ostream_backend > sink_tScreen;
-  boost::shared_ptr< sink_tScreen > sinkScreen(new sink_tScreen(backendScreen));
-  core->add_sink(sinkScreen);
-  
-  using namespace logging::trivial;
-  //src::severity_logger< severity_level > slg;
-  //BOOST_LOG_SEV(slg, info) << "A regular message";
-  //src::severity_logger< severity_level > lg;
-  //BOOST_LOG_SEV(lg, info) << "Follow-contact-analyze will be performed" ;
 }
 
 void logs::info(std::string s) {
-   
+  BOOST_LOG_TRIVIAL(info) << s; 
+}
+
+void logs::fatal(std::string s) {
+  BOOST_LOG_TRIVIAL(fatal) << s; 
 }
